@@ -25,6 +25,12 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: "Build app"
         run: "npm run build"
+      - name: Upload static files to NAV CDN
+        uses: navikt/frontend/actions/cdn-upload/v1@main
+        with:
+          cdn-team-name: frontend-golden-path
+          source: ./.next/static
+          destination: "/_next"
       - name: Push docker image to GAR
         uses: nais/docker-build-push@v0
         id: docker-push
