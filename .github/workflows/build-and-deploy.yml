@@ -38,3 +38,4 @@ jobs:
           CLUSTER: dev-gcp
           IMAGE: ${{ steps.docker-push.outputs.image }}
           RESOURCE: nais.yaml
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
