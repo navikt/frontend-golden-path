@@ -2,7 +2,7 @@ import "@navikt/ds-css";
 import { useRef, useState } from "react";
 import { Button, Popover } from "@navikt/ds-react";
 
-export default () => {
+const Home =  () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [openState, setOpenState] = useState(false);
 
@@ -12,6 +12,7 @@ export default () => {
         ref={buttonRef}
         onClick={() => setOpenState(!openState)}
         aria-expanded={openState}
+
       >
         Ikke klikk her!!!
       </Button>
@@ -26,3 +27,4 @@ export default () => {
     </>
   );
 };
+export default Home
