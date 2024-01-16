@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-
 jobs:
   "build":
     name: "build"
@@ -14,10 +13,10 @@ jobs:
       id-token: write
       packages: write
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: "actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11" # ratchet:actions/checkout@v4
         with:
           persist-credentials: false
-      - uses: "actions/setup-node@v4"
+      - uses: "actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8" # ratchet:actions/setup-node@v4
         with:
           node-version: "20"
           registry-url: "https://npm.pkg.github.com"
@@ -28,20 +27,20 @@ jobs:
       - name: "Build app"
         run: "npm run build"
       - name: Upload static files to NAV CDN
-        uses: navikt/frontend/actions/cdn-upload/v1@main
+        uses: navikt/frontend/actions/cdn-upload/v1@main # ratchet:exclude
         with:
           cdn-team-name: frontend-golden-path
           source: ./.next/static
           destination: "/_next"
       - name: Push docker image to GAR
-        uses: nais/docker-build-push@v0
+        uses: nais/docker-build-push@main # ratchet:exclude
         id: docker-push
         with:
           team: frontend-golden-path
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
       - name: Deploy
-        uses: nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@v2 # ratchet:exclude
         env:
           CLUSTER: dev-gcp
           IMAGE: ${{ steps.docker-push.outputs.image }}
