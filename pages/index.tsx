@@ -35,7 +35,7 @@ const Home = ({ foo }: { foo: string }) => {
 };
 
 export const getServerSideProps = async (req: NextApiRequest) => {
-  const bearerToken = req.headers["authorization"];
+  const bearerToken = req.headers["Authorization"];
   if (!bearerToken) {
     return {
       props: {
