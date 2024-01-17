@@ -48,7 +48,10 @@ export const getServerSideProps = async (req: NextApiRequest) => {
   // const validationResult = await validateIdportenToken(bearerToken);
 
   const grantResult = await grantTokenXOboToken(
-    bearerToken.replace("Bearer ", ""),
+    (Array.isArray(bearerToken) ? bearerToken[0] : bearerToken).replace(
+      "Bearer ",
+      ""
+    ),
     process.env.FRONTEND_GOLDEN_PATH_API_SCOPE as string
   );
   if (typeof grantResult === "string") {
