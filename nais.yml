@@ -38,3 +38,5 @@ spec:
     outbound:
       rules:
         - application: frontend-golden-path-api
+        - application: nav-dekoratoren
+          namespace: personbruker
