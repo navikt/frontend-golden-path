@@ -34,3 +34,7 @@ spec:
       autoLogin: true
       level: idporten-loa-high
       locale: nb
+  accessPolicy:
+    outbound:
+      rules:
+        - application: frontend-golden-path-api

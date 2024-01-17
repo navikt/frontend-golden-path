@@ -52,14 +52,11 @@ export const getServerSideProps = async (req: NextApiRequest) => {
     process.env.FRONTEND_GOLDEN_PATH_API_SCOPE as string
   );
   if (typeof grantResult === "string") {
-    const foo = await fetch(
-      "https://frontend-golden-path-api.intern.dev.nav.no",
-      {
-        headers: {
-          Authorization: grantResult,
-        },
-      }
-    ).then((res) => res.text());
+    const foo = await fetch("http://frontend-golden-path-api", {
+      headers: {
+        Authorization: grantResult,
+      },
+    }).then((res) => res.text());
 
     return {
       props: {
