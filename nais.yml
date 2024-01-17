@@ -27,8 +27,9 @@ spec:
       memory: 128Mi
   ingresses:
     - https://frontend-golden-path.ekstern.dev.nav.no
-  azure:
-    application:
-      enabled: true
+  idporten:
+    enabled: true
     sidecar:
       enabled: true
+      level: idporten-loa-high
+      locale: nb
