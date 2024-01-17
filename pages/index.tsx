@@ -1,7 +1,7 @@
 import "@navikt/ds-css";
 import { useRef, useState } from "react";
 import { Button, Heading, Popover } from "@navikt/ds-react";
-import { NextApiRequest } from "next";
+import { GetServerSideProps, NextApiRequest } from "next";
 import {
   grantTokenXOboToken,
   validateIdportenToken,
@@ -34,8 +34,8 @@ const Home = ({ foo }: { foo: string }) => {
   );
 };
 
-export const getServerSideProps = async (req: NextApiRequest) => {
-  const bearerToken = req.headers["Authorization"];
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const bearerToken = context.req.headers["Authorization"];
   if (!bearerToken) {
     return {
       props: {
