@@ -27,3 +27,8 @@ spec:
       memory: 128Mi
   ingresses:
     - https://frontend-golden-path.ekstern.dev.nav.no
+  azure:
+    application:
+      enabled: true
+    sidecar:
+      enabled: true
