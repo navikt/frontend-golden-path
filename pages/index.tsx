@@ -1,18 +1,24 @@
 import "@navikt/ds-css";
 import { useRef, useState } from "react";
-import { Button, Popover } from "@navikt/ds-react";
+import { Button, Heading, Popover } from "@navikt/ds-react";
+import { NextApiRequest } from "next";
+import {
+  grantTokenXOboToken,
+  validateIdportenToken,
+} from "@navikt/next-auth-wonderwall";
 
-const Home =  () => {
+const Home = ({ foo }: { foo: string }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [openState, setOpenState] = useState(false);
 
   return (
     <>
+      <Heading size="xlarge">{foo}</Heading>
+
       <Button
         ref={buttonRef}
         onClick={() => setOpenState(!openState)}
         aria-expanded={openState}
-
       >
         Ikke klikk her!!!
       </Button>
@@ -27,4 +33,46 @@ const Home =  () => {
     </>
   );
 };
-export default Home
+
+export const getServerSideProps = async (req: NextApiRequest) => {
+  const bearerToken = req.headers["authorization"];
+  if (!bearerToken) {
+    return {
+      props: {
+        foo: "noooo",
+      },
+    };
+  }
+
+  // TODO: return error codes
+  // const validationResult = await validateIdportenToken(bearerToken);
+
+  const grantResult = await grantTokenXOboToken(
+    bearerToken.replace("Bearer ", ""),
+    process.env.FRONTEND_GOLDEN_PATH_API_SCOPE as string
+  );
+  if (typeof grantResult === "string") {
+    const foo = await fetch(
+      "https://frontend-golden-path-api.intern.dev.nav.no",
+      {
+        headers: {
+          Authorization: grantResult,
+        },
+      }
+    ).then((res) => res.text());
+
+    return {
+      props: {
+        foo,
+      },
+    };
+  } else {
+    return {
+      props: {
+        foo: "hmmm",
+      },
+    };
+  }
+};
+
+export default Home;
