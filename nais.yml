@@ -32,8 +32,6 @@ spec:
     sidecar:
       enabled: true
       autoLogin: true
-      level: idporten-loa-high
-      locale: nb
   accessPolicy:
     outbound:
       rules:
