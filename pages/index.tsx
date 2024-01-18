@@ -52,7 +52,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       "Bearer ",
       ""
     ),
-    process.env.FRONTEND_GOLDEN_PATH_API_SCOPE as string
+    "dev-gcp:frontend-golden-path:frontend-golden-path-api"
   );
   console.log(JSON.stringify(grantResult, null, 4));
   if (typeof grantResult === "string") {
