@@ -40,3 +40,5 @@ spec:
         - application: frontend-golden-path-api
         - application: nav-dekoratoren
           namespace: personbruker
+  tokenx:
+    enabled: true
