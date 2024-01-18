@@ -36,6 +36,7 @@ const Home = ({ foo }: { foo: string }) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const bearerToken = context.req.headers["Authorization"];
+  console.log(context.req);
   if (!bearerToken) {
     return {
       props: {
