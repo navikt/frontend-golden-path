@@ -36,7 +36,6 @@ const Home = ({ foo }: { foo: string }) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const bearerToken = context.req.headers.authorization;
-  console.log("headers", context.req.headers);
   if (!bearerToken) {
     return {
       props: {
@@ -55,6 +54,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     ),
     process.env.FRONTEND_GOLDEN_PATH_API_SCOPE as string
   );
+  console.log(JSON.stringify(grantResult, null, 4));
   if (typeof grantResult === "string") {
     const foo = await fetch("http://frontend-golden-path-api", {
       headers: {
