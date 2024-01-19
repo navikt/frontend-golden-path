@@ -1,11 +1,10 @@
 import "@navikt/ds-css";
-import { useRef, useState } from "react";
 import { Button, Heading, Popover } from "@navikt/ds-react";
-import { GetServerSideProps, NextApiRequest } from "next";
 import {
-  grantTokenXOboToken,
-  validateIdportenToken,
+  grantTokenXOboToken
 } from "@navikt/next-auth-wonderwall";
+import { GetServerSideProps } from "next";
+import { useRef, useState } from "react";
 
 const Home = ({ foo }: { foo: string }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
