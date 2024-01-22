@@ -26,7 +26,7 @@ spec:
     limits:
       memory: 128Mi
   ingresses:
-    - https://frontend-golden-path-2.intern.dev.nav.no
+    - https://frontend-golden-path.intern.dev.nav.no
   idporten:
     enabled: true
     sidecar:
