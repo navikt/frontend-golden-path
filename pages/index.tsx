@@ -38,40 +38,47 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!bearerToken) {
     return {
       props: {
-        foo: "noooo",
+        foo: "Authorization header not found",
       },
     };
   }
-
-  // TODO: return error codes
-  // const validationResult = await validateIdportenToken(bearerToken);
 
   const grantResult = await grantTokenXOboToken(
     (Array.isArray(bearerToken) ? bearerToken[0] : bearerToken).replace(
       "Bearer ",
       ""
     ),
-    "dev-gcp:frontend-golden-path:frontend-golden-path-api"
+    `dev-gcp:frontend-golden-path:frontend-golden-path-api`
   );
-  if (typeof grantResult === "string") {
-    const foo = await fetch("http://frontend-golden-path-api", {
-      headers: {
-        Authorization: grantResult,
-      },
-    }).then((res) => res.text());
 
+  if (typeof grantResult !== "string") {
     return {
       props: {
-        foo,
+        apiResponse: `Error while exchanging token: ${grantResult.message}`,
       },
-    };
-  } else {
-    return {
-      props: {
-        foo: "hmmm",
-      },
-    };
+    }
+  };
+
+  const apiResponse = await lookupStuffInAPI(grantResult);
+  return {
+    props: {
+      apiResponse: apiResponse,
+    },
   }
-};
+}
+
+const lookupStuffInAPI = async (authToken: string) => {
+  try {
+    const apiResult = await fetch("http://frontend-golden-path-api", {
+      headers: {
+        Authorization: authToken,
+      },
+    })
+    return await apiResult.text();
+  } catch (error) {
+    return `oh noes, that didn't go so well: ${error}`
+  }
+
+}
 
 export default Home;
