@@ -6,13 +6,13 @@ import {
 import { GetServerSideProps } from "next";
 import { useRef, useState } from "react";
 
-const Home = ({ foo }: { foo: string }) => {
+const Home = ({ apiResponse }: { apiResponse: string }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [openState, setOpenState] = useState(false);
 
   return (
     <>
-      <Heading size="xlarge">{foo}</Heading>
+      <Heading size="xlarge">{apiResponse}</Heading>
 
       <Button
         ref={buttonRef}
