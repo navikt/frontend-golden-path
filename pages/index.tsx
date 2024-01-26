@@ -6,6 +6,7 @@ import { makeSession } from "@navikt/dp-auth";
 import { idporten } from "@navikt/dp-auth/identity-providers";
 import { tokenX, withInMemoryCache } from "@navikt/dp-auth/obo-providers";
 import { withPrometheus } from "@navikt/dp-auth/obo-providers/withPrometheus";
+import { Counter, Histogram } from "prom-client";
 
 const Home = ({ apiResponse }: { apiResponse: string }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -35,6 +36,10 @@ const Home = ({ apiResponse }: { apiResponse: string }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const histogram = new Histogram({
+    name: "frontend-golden-path-index-getServerSideProps",
+    help: "Duration of getServerSideProps in seconds",
+  }).startTimer();
   const bearerToken = context.req.headers.authorization;
   if (!bearerToken) {
     return {
@@ -67,6 +72,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         apiResponse: `Error while exchanging token`,
       },
     };
+  } finally {
+    histogram();
   }
 };
 

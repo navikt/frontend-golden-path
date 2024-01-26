@@ -30,6 +30,9 @@ spec:
   env:
     - name: PROVIDER
       value: idporten
+  prometheus:
+    enabled: true
+    path: "/api/internal/metrics"
   idporten:
     enabled: true
     sidecar:
