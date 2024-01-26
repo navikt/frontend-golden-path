@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@navikt/dp-auth": "^0.3.19",
+    "@navikt/dp-auth": "^0.3.20",
     "@navikt/ds-css": "^5.13.0",
     "@navikt/ds-react": "^5.13.0",
     "@navikt/nav-dekoratoren-moduler": "^2.1.5",
