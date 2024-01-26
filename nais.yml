@@ -32,7 +32,7 @@ spec:
       value: idporten
   prometheus:
     enabled: true
-    path: "/api/internal/metrics"
+    path: "/api/metrics"
   idporten:
     enabled: true
     sidecar:
