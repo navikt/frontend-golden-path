@@ -1,12 +1,9 @@
+import { getSession } from "@navikt/dp-auth";
 import "@navikt/ds-css";
 import { Button, Heading, Popover } from "@navikt/ds-react";
 import { GetServerSideProps } from "next";
-import { useRef, useState } from "react";
-import { makeSession } from "@navikt/dp-auth";
-import { idporten } from "@navikt/dp-auth/identity-providers";
-import { tokenX, withInMemoryCache } from "@navikt/dp-auth/obo-providers";
-import { withPrometheus } from "@navikt/dp-auth/obo-providers/withPrometheus";
 import { Histogram } from "prom-client";
+import { useRef, useState } from "react";
 
 const Home = ({ apiResponse }: { apiResponse: string }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -51,11 +48,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-
-  const getSession = makeSession({
-    identityProvider: idporten,
-    oboProvider: withInMemoryCache(withPrometheus(tokenX)),
-  });
 
   const session = await getSession(context.req);
 
