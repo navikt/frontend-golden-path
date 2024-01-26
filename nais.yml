@@ -27,6 +27,9 @@ spec:
       memory: 128Mi
   ingresses:
     - https://frontend-golden-path.intern.dev.nav.no
+  env:
+    - name: PROVIDER
+      value: idporten
   idporten:
     enabled: true
     sidecar:

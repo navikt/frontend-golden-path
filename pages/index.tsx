@@ -1,10 +1,11 @@
 import "@navikt/ds-css";
 import { Button, Heading, Popover } from "@navikt/ds-react";
-import {
-  grantTokenXOboToken
-} from "@navikt/next-auth-wonderwall";
 import { GetServerSideProps } from "next";
 import { useRef, useState } from "react";
+import { makeSession } from "@navikt/dp-auth";
+import { idporten } from "@navikt/dp-auth/identity-providers";
+import { tokenX, withInMemoryCache } from "@navikt/dp-auth/obo-providers";
+import { withPrometheus } from "@navikt/dp-auth/obo-providers/withPrometheus";
 
 const Home = ({ apiResponse }: { apiResponse: string }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -43,29 +44,31 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const grantResult = await grantTokenXOboToken(
-    (Array.isArray(bearerToken) ? bearerToken[0] : bearerToken).replace(
-      "Bearer ",
-      ""
-    ),
-    `dev-gcp:frontend-golden-path:frontend-golden-path-api`
-  );
+  const getSession = makeSession({
+    identityProvider: idporten,
+    oboProvider: withInMemoryCache(withPrometheus(tokenX)),
+  });
 
-  if (typeof grantResult !== "string") {
+  const session = await getSession(context.req);
+
+  try {
+    const oboToken = await session.apiToken(
+      `dev-gcp:frontend-golden-path:frontend-golden-path-api`
+    );
+    const apiResponse = await lookupStuffInAPI(oboToken);
     return {
       props: {
-        apiResponse: `Error while exchanging token: ${grantResult.message}`,
+        apiResponse: apiResponse,
       },
-    }
-  };
-
-  const apiResponse = await lookupStuffInAPI(grantResult);
-  return {
-    props: {
-      apiResponse: apiResponse,
-    },
+    };
+  } catch (e) {
+    return {
+      props: {
+        apiResponse: `Error while exchanging token`,
+      },
+    };
   }
-}
+};
 
 const lookupStuffInAPI = async (authToken: string) => {
   try {
@@ -73,12 +76,11 @@ const lookupStuffInAPI = async (authToken: string) => {
       headers: {
         Authorization: authToken,
       },
-    })
+    });
     return await apiResult.text();
   } catch (error) {
-    return `oh noes, that didn't go so well: ${error}`
+    return `oh noes, that didn't go so well: ${error}`;
   }
-
-}
+};
 
 export default Home;
