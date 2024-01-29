@@ -7,6 +7,12 @@ import { useRef, useState } from "react";
 
 const audience = `${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_NAMESPACE}:frontend-golden-path-api`
 
+const histogram = new Histogram({
+  name: "frontend_golden_path_get_server_side_props",
+  help: "Duration of getServerSideProps in seconds",
+  labelNames: ["oboExchange"],
+}).labels({ oboExchange: "idporten" })
+
 const Home = ({ apiResponse }: { apiResponse: string }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [openState, setOpenState] = useState(false);
@@ -35,13 +41,7 @@ const Home = ({ apiResponse }: { apiResponse: string }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const histogram = new Histogram({
-    name: "frontend_golden_path_get_server_side_props",
-    help: "Duration of getServerSideProps in seconds",
-    labelNames: ["provider"],
-  })
-    .labels({ provider: "idporten" })
-    .startTimer();
+  const end = histogram.startTimer();
   const bearerToken = context.req.headers.authorization;
   if (!bearerToken) {
     return {
@@ -68,7 +68,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   } finally {
-    histogram();
+    end()
   }
 };
 
