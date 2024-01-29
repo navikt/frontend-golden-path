@@ -5,6 +5,8 @@ import { GetServerSideProps } from "next";
 import { Histogram } from "prom-client";
 import { useRef, useState } from "react";
 
+const audience = `${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_NAMESPACE}:frontend-golden-path-api`
+
 const Home = ({ apiResponse }: { apiResponse: string }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [openState, setOpenState] = useState(false);
@@ -52,9 +54,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context.req);
 
   try {
-    const oboToken = await session.apiToken(
-      `dev-gcp:frontend-golden-path:frontend-golden-path-api`
-    );
+    const oboToken = await session.apiToken(audience);
     const apiResponse = await lookupStuffInAPI(oboToken);
     return {
       props: {
