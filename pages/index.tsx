@@ -1,17 +1,17 @@
-import { getSession } from "@navikt/dp-auth";
+import { getSession } from "@navikt/oasis";
 import "@navikt/ds-css";
 import { Button, Heading, Popover } from "@navikt/ds-react";
 import { GetServerSideProps } from "next";
 import { Histogram } from "prom-client";
 import { useRef, useState } from "react";
 
-const audience = `${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_NAMESPACE}:frontend-golden-path-api`
+const audience = `${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_NAMESPACE}:frontend-golden-path-api`;
 
 const histogram = new Histogram({
   name: "frontend_golden_path_get_server_side_props",
   help: "Duration of getServerSideProps in seconds",
   labelNames: ["oboExchange"],
-}).labels({ oboExchange: "idporten" })
+}).labels({ oboExchange: "idporten" });
 
 const Home = ({ apiResponse }: { apiResponse: string }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -68,7 +68,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   } finally {
-    end()
+    end();
   }
 };
 

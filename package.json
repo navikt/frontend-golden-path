@@ -9,11 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@navikt/dp-auth": "^0.3.20",
     "@navikt/ds-css": "^5.13.0",
     "@navikt/ds-react": "^5.13.0",
     "@navikt/nav-dekoratoren-moduler": "^2.1.5",
     "@navikt/next-auth-wonderwall": "^1.5.0",
+    "@navikt/oasis": "^1.0.1",
     "next": "14.0.4",
     "prom-client": "^15.1.0",
     "react": "^18",
