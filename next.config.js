@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  output: "standalone",
   reactStrictMode: true,
-  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://cdn.nav.no/frontend-golden-path' : undefined
-}
+  assetPrefix:
+    process.env.NODE_ENV === "production"
+      ? "https://cdn.nav.no/frontend-golden-path"
+      : undefined,
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
