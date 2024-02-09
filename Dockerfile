@@ -16,7 +16,10 @@ COPY public /app/public
 
 RUN npm run build
 
-FROM gcr.io/distroless/nodejs20-debian11@sha256:8cf9967ae9ba1e64089f853abac42b41f2af95ff3aa00d08c26e5f75714605d4 as runtime
+FROM scratch AS export
+COPY --from=builder /app/.next/static /
+
+FROM gcr.io/distroless/nodejs20-debian11@sha256:8cf9967ae9ba1e64089f853abac42b41f2af95ff3aa00d08c26e5f75714605d4 AS runtime
 
 WORKDIR /app
 
