@@ -16,9 +16,6 @@ COPY public /app/public
 
 RUN npm run build
 
-FROM scratch AS export
-COPY --from=builder /app/.next/static /
-
 FROM gcr.io/distroless/nodejs20-debian11@sha256:8cf9967ae9ba1e64089f853abac42b41f2af95ff3aa00d08c26e5f75714605d4 AS runtime
 
 WORKDIR /app
@@ -31,3 +28,6 @@ EXPOSE 3000
 ENV NODE_ENV=production
 
 CMD ["server.js"]
+
+FROM scratch AS export
+COPY --from=builder /app/.next/static /
