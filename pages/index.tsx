@@ -1,4 +1,4 @@
-import { getSession } from "@navikt/oasis";
+import { validateToken, requestOboToken } from "@navikt/oasis";
 import "@navikt/ds-css";
 import { Button, Heading, Popover } from "@navikt/ds-react";
 import { GetServerSideProps } from "next";
@@ -51,24 +51,34 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const session = await getSession(context.req);
+  const token = context.req.headers.authorization!.replace("Bearer ", "");
+  const validation = await validateToken(token);
 
-  try {
-    const oboToken = await session.apiToken(audience);
-    const apiResponse = await lookupStuffInAPI(oboToken);
-    return {
-      props: {
-        apiResponse: apiResponse,
-      },
-    };
-  } catch (e) {
-    return {
-      props: {
-        apiResponse: `Error while exchanging token`,
-      },
-    };
-  } finally {
+  if (validation.ok) {
+    const obo = await requestOboToken(token, audience);
+    if (obo.ok) {
+      const apiResponse = await lookupStuffInAPI(obo.token);
+      end();
+      return {
+        props: {
+          apiResponse: apiResponse,
+        },
+      };
+    } else {
+      end();
+      return {
+        props: {
+          apiResponse: `Error while exchanging token`,
+        },
+      };
+    }
+  } else {
     end();
+    return {
+      props: {
+        apiResponse: `Error while validating token`,
+      },
+    };
   }
 };
 
