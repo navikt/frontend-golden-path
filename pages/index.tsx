@@ -1,5 +1,6 @@
-import { validateToken, requestOboToken } from "@navikt/oasis";
 import "@navikt/ds-css";
+
+import { validateToken, requestOboToken, getToken } from "@navikt/oasis";
 import { Button, Heading, Popover } from "@navikt/ds-react";
 import { GetServerSideProps } from "next";
 import { Histogram } from "prom-client";
@@ -42,8 +43,8 @@ const Home = ({ apiResponse }: { apiResponse: string }) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const end = histogram.startTimer();
-  const bearerToken = context.req.headers.authorization;
-  if (!bearerToken) {
+  const token = getToken(context.req)
+  if (!token) {
     return {
       props: {
         foo: "Authorization header not found",
@@ -51,7 +52,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const token = context.req.headers.authorization!.replace("Bearer ", "");
   const validation = await validateToken(token);
 
   if (validation.ok) {
