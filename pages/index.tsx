@@ -35,7 +35,7 @@ const Home = ({ apiResponse }: { apiResponse: string }) => {
         onClose={() => setOpenState(false)}
         anchorEl={buttonRef.current}
       >
-        <Popover.Content>Du klarte ikke å la være, altså...</Popover.Content>
+        <Popover.Content>Du klarte ikke å la være, altså....</Popover.Content>
       </Popover>
     </>
   );
