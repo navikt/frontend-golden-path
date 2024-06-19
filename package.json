@@ -9,12 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@navikt/ds-css": "^5.13.0",
-    "@navikt/ds-react": "^5.13.0",
-    "@navikt/nav-dekoratoren-moduler": "^2.1.5",
-    "@navikt/oasis": "^3.0.0",
-    "next": "14.0.4",
-    "prom-client": "^15.1.0",
+    "@navikt/ds-css": "^6.11.0",
+    "@navikt/ds-react": "^6.11.0",
+    "@navikt/nav-dekoratoren-moduler": "^2.1.6",
+    "@navikt/oasis": "^3.3.0",
+    "next": "14.2.4",
+    "prom-client": "^15.1.2",
     "react": "^18",
     "react-dom": "^18"
   },
@@ -22,8 +22,8 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "eslint": "^8",
-    "eslint-config-next": "14.0.4",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.2.4",
     "typescript": "^5"
   }
 }

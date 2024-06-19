@@ -8,4 +8,4 @@ const nextConfig = {
       : undefined,
 };
 
-module.exports = nextConfig;
+export default nextConfig;
