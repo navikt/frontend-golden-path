@@ -10,6 +10,7 @@ metadata:
 spec:
   ingresses:
     - https://frontend-golden-path.intern.dev.nav.no
+    - https://roger.com
   image: {{image}}
   port: 3000
   prometheus:
