@@ -1,0 +1,43 @@
+name: "CodeQL"
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    - cron: '32 13 * * 1'
+  workflow_dispatch:
+jobs:
+  analyze-javascript:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: "https://npm.pkg.github.com"
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@f6091c0113d1dcf9b98e269ee48e8a7e51b7bdd4
+        with:
+          languages: javascript-typescript, actions
+          queries: security-extended,security-and-quality
+          config: |
+            threat-models: local
+            paths-ignore:
+              - node_modules/
+              - dist/
+      - name: Npm build
+        run: npm install && npm run build
+        env: 
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+      - name: Perform CodeQL Analysis
+
+        uses: github/codeql-action/analyze@f6091c0113d1dcf9b98e269ee48e8a7e51b7bdd4
