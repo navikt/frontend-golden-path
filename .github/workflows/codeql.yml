@@ -36,8 +36,8 @@ jobs:
               - dist/
       - name: Npm build
         run: npm install && npm run build
-        env:
-          NODE_AUTH_TOKEN=${{ secrets.READER_TOKEN }}
+        env: 
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Perform CodeQL Analysis
 
         uses: github/codeql-action/analyze@f6091c0113d1dcf9b98e269ee48e8a7e51b7bdd4
