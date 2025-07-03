@@ -12,37 +12,58 @@ jobs:
     permissions:
       contents: read
       id-token: write
-      packages: write
+    outputs:
+      image: ${{ steps.docker-push.outputs.image }}
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
         with:
           persist-credentials: false
       - name: Build static files
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # ratchet:docker/build-push-action@v5
         with:
           target: export
           outputs: type=local,dest=static
           secrets: NODE_AUTH_TOKEN=${{ secrets.READER_TOKEN }}
       - name: Upload static files to NAV CDN
-        uses: nais/deploy/actions/cdn-upload/v2@master
+        uses: nais/deploy/actions/cdn-upload/v2@70ac914d5785b492f1247df72e04b8420c1a6cb7 # ratchet:nais/deploy/actions/cdn-upload/v2@master
         with:
           team: frontend-golden-path
           source: ./static
           destination: "/_next"
-          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
-          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
       - name: Build and push docker image to GAR
-        uses: nais/docker-build-push@main
+        uses: nais/docker-build-push@1fae4798c79f4af4c3cdbd3fe65e51f8f3ba2368 # ratchet:nais/docker-build-push@main
         id: docker-push
         with:
           target: runtime
           team: frontend-golden-path
-          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
-          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           build_secrets: NODE_AUTH_TOKEN=${{ secrets.READER_TOKEN }}
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+        contents: read
+        id-token: write
+    needs: build
+    steps:
       - name: Deploy to nais
-        uses: nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@70ac914d5785b492f1247df72e04b8420c1a6cb7 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           IMAGE: ${{ steps.docker-push.outputs.image }}
           RESOURCE: nais.yml
+  trivy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # for dependency graph & sarif
+      security-events: write # push sarif to github security
+    needs: build
+    steps:
+      - name: Scan docker image for secrets
+        uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5
+        with:
+          image-ref: '${{ needs.build.outputs.image }}'
+          format: 'sarif'
+          scanners: 'secret'
+          output: 'trivy.sarif'
+      - uses: github/codeql-action/upload-sarif@ff0a06e83cb2de871e5a09832bc6a81e7276941f
+        with:
+          sarif_file: 'trivy.sarif'
