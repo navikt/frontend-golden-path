@@ -1,22 +1,27 @@
-FROM node:20@sha256:fd0115473b293460df5b217ea73ff216928f2b0bb7650c5e7aa56aae4c028426 AS builder
+FROM node:24-slim@sha256:8cf9967ae9ba1e64089f853abac42b41f2af95ff3aa00d08c26e5f75714605d4 AS builder
 
 WORKDIR /app
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="${PNPM_HOME}:${PATH}"
+
+RUN corepack enable pnpm
 
 RUN --mount=type=secret,id=NODE_AUTH_TOKEN sh -c \
     'npm config set //npm.pkg.github.com/:_authToken=$(cat /run/secrets/NODE_AUTH_TOKEN)'
 RUN npm config set @navikt:registry=https://npm.pkg.github.com
 
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package.json pnpm-lock.json ./
+RUN pnpm install --frozen-lockfile
 
 COPY next.config.mjs tsconfig.json ./
 COPY pages pages
 COPY styles styles
 COPY public public
 
-RUN npm run build
+RUN pnpm run build
 
-FROM gcr.io/distroless/nodejs20-debian11@sha256:8cf9967ae9ba1e64089f853abac42b41f2af95ff3aa00d08c26e5f75714605d4 AS runtime
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/node:24-slim AS runtime
 
 WORKDIR /app
 

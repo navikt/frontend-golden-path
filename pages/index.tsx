@@ -1,10 +1,9 @@
-import "@navikt/ds-css";
-
 import { validateToken, requestOboToken, getToken } from "@navikt/oasis";
 import { Button, Heading, Popover } from "@navikt/ds-react";
 import { GetServerSideProps } from "next";
 import { Histogram } from "prom-client";
 import { useRef, useState } from "react";
+import { CircleSlashIcon } from "@navikt/aksel-icons";
 
 const audience = `${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_NAMESPACE}:frontend-golden-path-api`;
 
@@ -24,6 +23,7 @@ const Home = ({ apiResponse }: { apiResponse: string }) => {
 
       <Button
         ref={buttonRef}
+        icon={<CircleSlashIcon title={"Advarsel"} />}
         onClick={() => setOpenState(!openState)}
         aria-expanded={openState}
       >
