@@ -13,7 +13,7 @@
     "@navikt/ds-react": "^6.11.0",
     "@navikt/nav-dekoratoren-moduler": "^2.1.6",
     "@navikt/oasis": "^3.3.0",
-    "next": "14.2.4",
+    "next": "15.5.28",
     "prom-client": "^15.1.2",
     "react": "^18",
     "react-dom": "^18"
@@ -23,7 +23,12 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.4",
+    "eslint-config-next": "15.5.28",
     "typescript": "^5"
+  },
+  "overrides": {
+    "postcss": "^8.5.23",
+    "form-data": "^4.0.6",
+    "ws": "^8.21.0"
   }
 }

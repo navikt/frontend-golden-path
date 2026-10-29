@@ -1,4 +1,6 @@
-FROM node:26@sha256:6c6f2679f5b655c7c6091a34b81372b5962ca9f25d897a501d613742f922567b AS builder
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/node:26-dev AS builder
+
+USER root
 
 WORKDIR /app
 
@@ -16,7 +18,7 @@ COPY public public
 
 RUN npm run build
 
-FROM gcr.io/distroless/nodejs26-debian13@sha256:fa81a7c62a5057f247e658d5a18af09a332742977a6ff8a89e455b85cff33266 AS runtime
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/node:26 AS runtime
 
 WORKDIR /app
 
