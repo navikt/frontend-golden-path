@@ -19,6 +19,15 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with:
           persist-credentials: false
+      - name: Build and push docker image to GAR
+        uses: nais/docker-build-push@main
+        id: docker-push
+        with:
+          target: runtime
+          team: frontend-golden-path
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          build_secrets: NODE_AUTH_TOKEN=${{ secrets.READER_TOKEN }}
       - name: Build static files
         uses: docker/build-push-action@v5
         with:
@@ -33,15 +42,6 @@ jobs:
           destination: "/_next"
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
-      - name: Build and push docker image to GAR
-        uses: nais/docker-build-push@main
-        id: docker-push
-        with:
-          target: runtime
-          team: frontend-golden-path
-          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
-          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
-          build_secrets: NODE_AUTH_TOKEN=${{ secrets.READER_TOKEN }}
       - name: Deploy to nais
         uses: nais/deploy/actions/deploy@v2
         env:
